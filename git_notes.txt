@@ -21,4 +21,19 @@ git log   //显示commit id ,作者, 更新日期,  更新描述
 
 git log --pretty=oneline     //只显示 commit id和更新描述
 
+2版本回退
+git reset --hard HEAD^  //回退到上一版版， 回退到上上一版本  用2个^,回退到前100个版本用 HEAD~100
+
+3版本回退和前进
+git reset --hard 版本号id
+
+4.显示版本号
+git reflog
+
+三*******************撤销修改*********************
+1 工作区的文件已经修改了但是还没add到缓存区, 这种撤销修改就回到和版本库一模一样的状态
+git checkout -- git_notes.txt  
+2.工作区的文件已经修改 并且add到缓存区  接着又做了修改   ， 就撤销修改回到添加暂缓蘧后的状态
+
+
  

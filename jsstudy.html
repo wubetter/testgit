@@ -14,10 +14,16 @@
 	<div id="jiao"></div>
 	<div class="change"></div>
 	<script>
-	var a =1;
-	function a(){alert(1)}
-	function a(){alert(555)}
-	alert(a);
+	function Person(){
+		this.name='zhang';
+		this.age=20;
+		this.sex='nan';
+		this.sayName = function (){
+			return this.name;
+		}
+	}
+	var person = new Person();
+	alert(person.name);
 	</script>
 </body>
 </html>
