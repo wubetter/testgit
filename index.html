@@ -2,36 +2,199 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>js学习笔记</title>
+	<title>Document</title>
 	<style>
-		#jiao{width:200px;height:50px;background:red;border-top-left-radius: 100px 4px;}
-		.change{width:100px;height:200px;background:green;}
-		.box{width:100px;height:100px;background:#ccc;}
-		.meber{width:100px;height:200px;background:rgba(0,0,0,.5);}
-		.mebber{display:block;line-height:20px;}
+		*{
+			margin:0;padding:0;
+			background:#000;
+		}
+		#wrap{
+			perspective:2000px;
+			
+		}
+		.box{
+			transform-style:preserve-3d;
+			transform-origin: center center center;
+			transform: rotateY(0deg);
+			width:200px;
+			height:50px;
+			position:relative;
+			margin:150px auto 0;
+			/*border:1px solid red;*/
+			background:transparent;
+		}
+		.imgBox{
+			transform-style:preserve-3d;
+			transform-origin: center center center;
+		}
+		.box img{
+			position:absolute;
+			
+			transform:rotateY(0deg);
+			box-shadow: 0px 0px 12px rgba(0,255,255,0.5);
+    		border: 1px solid rgba(127,255,255,0.25)
+		}
+		.box img:hover{
+			box-shadow: 0px 0px 12px rgba(0,255,255,0.75);
+    		border: 1px solid rgba(127,255,255,0.75);
+		}
+		#x{
+			width:200px;
+			height:0;
+			transform-origin: left center;
+			border-top:2px solid red;
+			/*transform:translate3d(0 0 0);*/
+			position:absolute;
+			left:50%;
+			top:50%;
+			text-align:right;
+			color:red;
+		}
+		#y{
+			width:200px;
+			height:0;
+			transform-origin: left center;
+			border-top:2px solid red;
+			transform:rotateZ(-90deg);
+			position:absolute;
+			left:50%;
+			top:50%;
+			text-align:right;
+			color:red;
+			writing-mode: vertical-rl;
+		}
+		#z{
+			width:200px;
+			height:0;
+			transform-origin: left center;
+			border-top:2px solid red;
+			transform:rotateY(90deg);
+			position:absolute;
+			left:50%;
+			top:50%;
+			color:red;
+			text-align:right;
+		}
+		.db{
+			width:1000px;
+			height:1000px;
+			background: -webkit-radial-gradient(rgba(185, 22, 127, 0.24) 0%,transparent 76%);;
+			border-radius: 50%;
+			transform: translateX(-400px) translateY(-270px) rotateX(90deg);
+		}
 	</style>
 </head>
 <body>
-<h2>第三次修改</h2>
-	<div id="jiao"></div>
-	<div class="mei"> </div>
-	<div class="change"></div>
-	<p>当前分支已经是dev了 这里是更新的内容</p>
-	<p>这条信息是在远程仓库添加的</p>
+	<div id="wrap">
+		<div class="box">
+			<div class="imgBox">
+				<img src="images/1.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/2.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/3.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/4.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/5.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/6.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/7.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/8.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/9.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/10.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/11.jpg" width=200 alt="">
+			</div>
+			<div class="imgBox">
+				<img src="images/12.jpg" width=200 alt="">
+			</div>
+			<p id="x">x</p>
+			<p id="y">y</p>
+			<p id="z">z</p>
+			<p class="db"></p>
+		</div>
+	</div>
 	<script>
-	function Person(){
-		this.name='zhang';
-		this.age=20;
-		this.sex='nan';
-		this.sayName = function (){
-			return this.name;
+	window.onload = function(){
+
+
+		var oImgBox = document.getElementsByClassName('imgBox');
+
+		var oBox = document.getElementsByClassName('box')[0];
+		var oImgLen = oImgBox.length;
+		var oDeg = 360/oImgLen;
+		var nowX,nowY,cx,cy,minX=0,minY=0,minZ=0,timer;
+		for (var i = 0; i < oImgLen; i++) {
+			oImgBox[i].style.transition = 'transform 1s '+ (oImgLen-i)*0.2 +'s';
+			oImgBox[i].style.transform = 'rotateY(' + oDeg*i+ 'deg) translateZ(500px)';
+			var oImg = oImgBox[i].getElementsByTagName('img')[0];
+			oImg.style.transition = 'transform 1s '+ (oImgLen-i)*0.2 +'s';
+			oImg.style.transform = 'rotateY(720deg)';
+
+		}
+		document.onmousedown = function(e){
+			e = e || window.event;
+			var startX = e.clientX;
+			var startY = e.clientY;
+			clearInterval(timer);
+			this.onmousemove = function(e){
+				
+				e = e || window.event;
+				nowX = e.clientX;
+				nowY = e.clientY;
+				cx = nowX - startX;
+				cy = nowY - startY;
+				// console.log(nowX,nowY);
+				minX += cx*0.2;
+				minY -= cy*0.2;
+				console.log(minX,minY);
+				oBox.style.transform = 'rotateX(' + minY + 'deg) rotateY(' + minX + 'deg)  translateZ('+ minZ +'px)';
+
+				startX = nowX;
+				startY = nowY;
+			}
+			this.onmouseup = function(e){
+				this.onmousemove = null;
+				timer = setInterval(function(){
+					cx *=0.95;
+					cy *=0.95;
+					minX += cx*0.2;
+					minY -= cy*0.2;
+					oBox.style.transform = 'rotateX(' + minY + 'deg) rotateY(' + minX + 'deg)  translateZ('+ minZ +'px)';
+					if(Math.abs(minX)<0.1 && Math.abs(minY)<0.1){
+						clearInterval(timer);	
+					}
+				},13)
+				
+			}
+
+
+			return false;
+		}
+		document.onmousewheel = function(e){
+			e = e || window.event;
+			console.log(e);
+			console.log(e.wheelDelta);
+			minZ -=  e.wheelDelta;
+			oBox.style.transform = 'rotateX(' + minY + 'deg) rotateY(' + minX + 'deg) translateZ('+ minZ +'px)';
+			oBox.style.transformOrigin = 'center center ' + minZ + 'px';
 		}
 	}
-	Person.prototype.run = function(){
-		return this.age;
-	}
-	var person = new Person();
-	console.log(person.name);
 	</script>
 </body>
 </html>
