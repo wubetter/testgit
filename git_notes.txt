@@ -1,39 +1,42 @@
-1.�����汾�� ����ʼ��
+1.创建版本库 并初始化
 mkdir testgit
 git init
 
-2.�ļ����� ����������
+2.文件添加 到缓存区中
 git add readme.txt 
-3.�鿴�ļ�״̬
+3.查看文件状态
 git status
-ע��  git�ļ�״̬��3��  �޸Ĺ���δ�ƽ�����������ɫ��ʾ��  �޸Ĺ��� �ƽ�����������ɫ��ʾ�� �Ѿ��ύ��
+注意  git文件状态分3中  修改过的未推进缓存区（红色提示）  修改过的 推进缓存区（绿色显示） 已经提交过
 
-4.�ύ
-git commit -m '�����޸ĵ�ע��'
+4.提交
+git commit -m '本次修改的注释'
 
-5.�Ƚ��ļ�������
+5.比较文件差异性
 git diff readme.txt
 
-��***************�汾����******************
+二***************版本回退******************
 
-1 �鿴�����汾��־
-git log   //��ʾcommit id ,����, ��������,  ��������
+1 查看各个版本日志
+git log   //显示commit id ,作者, 更新日期,  更新描述
 
-git log --pretty=oneline     //ֻ��ʾ commit id�͸�������
+git log --pretty=oneline     //只显示 commit id和更新描述
+git log --graph --pretty=oneline --abbrev-commit 
 
-2�汾����
-git reset --hard HEAD^  //���˵���һ��棬 ���˵�����һ�汾  ��2��^,���˵�ǰ100���汾�� HEAD~100
+2版本回退
+git reset --hard HEAD^  //回退到上一版版， 回退到上上一版本  用2个^,回退到前100个版本用 HEAD~100
 
-3�汾���˺�ǰ��
-git reset --hard �汾��id
+3版本回退和前进
+git reset --hard 版本号id
 
-4.��ʾ�汾��
+4.显示版本号
 git reflog
 
-��*******************�����޸�*********************
-1 ���������ļ��Ѿ��޸��˵��ǻ�ûadd��������, ���ֳ����޸ľͻص��Ͱ汾��һģһ����״̬
+三*******************撤销修改*********************
+1 工作区的文件已经修改了但是还没add到缓存区, 这种撤销修改就回到和版本库一模一样的状态
 git checkout -- git_notes.txt  
-2.���������ļ��Ѿ��޸� ����add��������  �����������޸�   �� �ͳ����޸Ļص������ݻ�޾���״̬
+2.工作区的文件已经修改 并且add到缓存区  接着又做了修改   ， 就撤销修改回到添加暂缓蘧后的状态
+
+
 
 
  
