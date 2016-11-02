@@ -22,6 +22,8 @@ git diff HEAD -- [files] 版本库和 暂缓区比较
 git log   //显示commit id ,作者, 更新日期,  更新描述
 
 git log --pretty=oneline     //只显示 commit id和更新描述
+git log --graph --pretty=oneline --abbrev-commit 
+
 
 2版本回退
 git reset --hard HEAD^  //回退到上一版版， 回退到上上一版本  用2个^,回退到前100个版本用 HEAD~100
@@ -36,6 +38,11 @@ git reflog
 1 工作区的文件已经修改了但是还没add到缓存区, 这种撤销修改就回到和版本库一模一样的状态
 git checkout -- git_notes.txt  
 2.工作区的文件已经修改 并且add到缓存区  接着又做了修改   ， 就撤销修改回到添加暂缓蘧后的状态
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> dev
 
 git checkout -- git_notes.txt 撤回到和 缓存区一致 
 1已经add 过 则 工作区撤回到 add的内容
