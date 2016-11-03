@@ -13,7 +13,8 @@ git commit -m '本次修改的注释'
 
 5.比较文件差异性
 git diff readme.txt
-
+git diff --cached  缓存区和版本库比较
+git diff HEAD  本地和版本库比较1
 二***************版本回退******************
 
 1 查看各个版本日志
