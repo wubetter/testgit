@@ -25,9 +25,10 @@ var Board = function (container,status){
         type:'START'
     })
     this.worker.onmessage = function(e) {
+        self.setStatus("电脑下子("+e.data[0]+","+e.data[1]+"), 用时"+((new Date() - self.time)/1000)+"秒");
         self._set(e.data[0], e.data[1], R.com);
         self.lock = false;
-        self.setStatus("电脑下子("+e.data[0]+","+e.data[1]+"), 用时"+((new Date() - self.time)/1000)+"秒");
+        
     }
 }
 //画棋子
