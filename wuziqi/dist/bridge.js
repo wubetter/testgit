@@ -289,7 +289,7 @@ var ai = new AI();
  * @return {[type]}
  */
 onmessage = function(e) {
-    debugger;
+    // debugger;
     var d = e.data;
     if (d.type == "START") {
         ai.start(15);
