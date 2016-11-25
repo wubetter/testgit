@@ -2,6 +2,7 @@
 var S = require("./score.js");
 var R = require("./role.js");
 var W = require("./win.js");
+var T = require('./time-difference.js');
 
 var Board = function (container,status){
     this.container = container;
@@ -18,17 +19,13 @@ var Board = function (container,status){
         y = Math.floor( y / 30);
 
         self.set(x,y,1);
-    }
-    // this.worker = new Worker("./dist/bridge.js?r="+(+new Date()));
-    this.worker = new Worker("./dist/bridge.js");
-    this.worker.postMessage({
-        type:'START'
-    })
+    };
+    this.worker = new Worker("./dist/bridge.js?r="+(+new Date()));
+    //this.worker = new Worker("./dist/bridge.js");
     this.worker.onmessage = function(e) {
         self.setStatus("电脑下子("+e.data[0]+","+e.data[1]+"), 用时"+((new Date() - self.time)/1000)+"秒");
         self._set(e.data[0], e.data[1], R.com);
         self.lock = false;
-        
     }
 }
 //画棋子
@@ -57,12 +54,29 @@ Board.prototype.draw = function(){
     }
     
 
-}
+};
+Board.prototype.start = function(){
+    var me = this;
+    if(me.started) return;
+    var date1 = new Date();
+    me.timer = setInterval(function(){
+        timeDom.innerHTML = '你已经和电脑撕逼 ' + T(date1,new Date());
+    },1000);
+    me.initBoard();
+    me.board[7][7] = R.com;
+    me.steps.push([7,7]);
+    this.draw();
+    this.started = true;
+    this.worker.postMessage({
+        type:"START"
+    });
+};
 Board.prototype.stop = function() {
   if(!this.started) return;
+    clearInterval(this.timer);
   this.setStatus("游戏结束！请刷新从新开始");
   this.started = false;
-}
+};
 Board.prototype._set = function(x, y, role) {
   this.board[x][y] = role;
   this.steps.push([x,y]);
@@ -77,10 +91,10 @@ Board.prototype._set = function(x, y, role) {
   } else if (winner == R.hum) {
       self.stop();
     setTimeout(function(){
-        alert('牛逼了，world 哥，你赢了！');     
+        alert('牛逼了，word 哥，你赢了！');
     },50)
   }
-}
+};
 
 Board.prototype.set = function(x, y, role) {
   if(this.board[x][y] !== 0) {
@@ -101,20 +115,12 @@ Board.prototype.com = function(x, y, role) {
   });
   
   this.setStatus("电脑正在思考...");
-}
-// Board.prototype.stop = function() {
-//   if(!this.started) return;
-//   this.setStatus("请点击开始按钮");
-//   this.started = false;
-// }
+};
 Board.prototype.setStatus = function(s) {
   this.status.innerHTML = s;
-}
+};
 Board.prototype.initBoard = function(){
-    this._drawBoard();
     this.board = [];
-    this.lock = false;
-    this.started = true;
     for(var i=0;i<15;i++) {
         var row = [];
         for(var j=0;j<15;j++) {
@@ -126,7 +132,7 @@ Board.prototype.initBoard = function(){
 
 }
 //棋盘画线条
-Board.prototype._drawBoard = function(){
+Board.prototype.drawBoard = function(){
     context.beginPath();
     context.fillStyle = '#fdd186';
     context.fillRect(2, 2, canvasWidth - 2, canvasHeight - 2);
@@ -150,8 +156,20 @@ container.height = canvasHeight;
 var context = container.getContext('2d');
 var status = document.getElementById('status');
 var b = new Board(container,status);
-b.initBoard();
-},{"./role.js":2,"./score.js":3,"./win.js":4}],2:[function(require,module,exports){
+b.drawBoard();
+var timeDom = document.getElementById('time');
+var startBtn = document.getElementById('start');
+var backBtn = document.getElementById('back');
+var reStartBtn = document.getElementById('reStart');
+if(startBtn){
+    startBtn.addEventListener('click',function(){
+        b.start();
+    })
+}
+
+
+
+},{"./role.js":2,"./score.js":3,"./time-difference.js":4,"./win.js":5}],2:[function(require,module,exports){
 module.exports = {
   com: 2,
   hum: 1,
@@ -179,6 +197,23 @@ module.exports = {
   BLOCKED_FOUR: 10000
 }
 },{}],4:[function(require,module,exports){
+var t = function (date1,date2){
+    var timeDiff = date2.getTime() - date1.getTime();
+
+    var hours=Math.floor(timeDiff/(3600*1000));
+    //计算相差分钟数
+    var leave1=timeDiff%(3600*1000);        //计算小时数后剩余的毫秒数
+    var minutes=Math.floor(leave1/(60*1000));
+
+
+    //计算相差秒数
+    var leave2=leave1%(60*1000);      //计算分钟数后剩余的毫秒数
+    var seconds=Math.round(leave2/1000);
+
+    return (hours <10? '0' + hours : hours)+ ":"+ (minutes <10 ? '0' + minutes : minutes)+":"+(seconds <10 ? '0' + seconds : seconds);
+};
+module.exports = t;
+},{}],5:[function(require,module,exports){
 var R = require("./role.js");
 var isFive = function(board, p, role) {
   var len = board.length;

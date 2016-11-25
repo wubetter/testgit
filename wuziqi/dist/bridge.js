@@ -14,17 +14,6 @@ AI.prototype.set = function(x,y){
     // var p;
     board.put([x,y],R.hum,true);
     var p = m(config.searchDeep);
-    // if(p.length == 0){
-    //     var score = p.score ? p.score : -1000;
-    //     if(board.board[7][7] == R.empty){
-    //         p = [7, 7];
-    //     } else if (board.board[7][7] == R.hum) {
-    //         var nextRow = 7 + (Math.random() < 0.5 ? -1 : 1),
-    //             nextColumn = 7 + (Math.random() < 0.5 ? -1 : 1);
-    //         p = [nextRow, nextColumn];
-    //         p.score =score;
-    //     }
-    // }
     board.put(p,R.com,true);
     return p;
 }
@@ -37,7 +26,7 @@ var R = require("./role.js");
 var S = require("./score.js");
 var config = require("./config.js");
 
-var Board = function(){}
+var Board = function(){};
 Board.prototype.init = function(sizeOrBoard){
     this.evaluateCache = {};
     this.steps = [];
@@ -57,6 +46,9 @@ Board.prototype.init = function(sizeOrBoard){
             }
             this.board.push(row);
         }
+        this.board[7][7] = R.com;
+        this.steps.push([7,7]);
+        this.zobrist.go(7,7, R.com);
     }
     //init 电脑得分数组和棋手得分数组
     this.comScore = [];
@@ -80,8 +72,7 @@ Board.prototype.initScore = function() {
   for(var i=0;i<board.length;i++) {
     for(var j=0;j<board[i].length;j++) {
       if(board[i][j] == R.empty) {
-        var con = this.steps.length <2 ? 1 :2;
-        if(hasNeighbor(board, [i, j], 2, con)) { //必须是有邻居的才行
+        if(hasNeighbor(board, [i, j], 2, 2)) { //必须是有邻居的才行
           var cs = scorePoint(board, [i, j], R.com);
           var hs = scorePoint(board, [i, j], R.hum);
           this.comScore[i][j] = cs;
@@ -212,8 +203,7 @@ Board.prototype.gen = function() {
   for(var i=0;i<board.length;i++) {
     for(var j=0;j<board[i].length;j++) {
       if(board[i][j] == R.empty) {
-        var con = this.steps.length <2 ? 1:2;
-        if(hasNeighbor(board, [i, j], 2, con)) { //必须是有邻居的才行
+        if(hasNeighbor(board, [i, j], 2, 2)) { //必须是有邻居的才行
           var scoreHum = this.humScore[i][j];
           var scoreCom = this.comScore[i][j];
 
@@ -289,7 +279,7 @@ var ai = new AI();
  * @return {[type]}
  */
 onmessage = function(e) {
-    // debugger;
+    //debugger;
     var d = e.data;
     if (d.type == "START") {
         ai.start(15);
